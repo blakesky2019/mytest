@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itbsky.dao.OrderSettingDao">
+
+    <update id="updateOrderNumber" parameterType="Date">
+       update t_ordersetting set reservations=(reservations+1) where orderDate=#{date}
+    </update>
+
+    <delete id="clearOrderSetting" parameterType="String">
+        delete from t_ordersetting where orderDate &lt; #{firstDay4ThisMonth}
+    </delete>
+</mapper>

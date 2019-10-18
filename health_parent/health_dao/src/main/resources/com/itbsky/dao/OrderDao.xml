@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itbsky.dao.OrderDao">
+
+    <select id="findOrderByOrder" parameterType="Order" resultMap="returnOrderList">
+        select * from t_order
+        <where>
+            <if test="id!=null">and id=#{id}</if>
+            <if test="memberId!=null">and member_id=#{memberId}</if>
+            <if test="orderDate!=null">and orderDate=#{orderDate}</if>
+            <if test="orderType!=null">and orderType=#{orderType}</if>
+            <if test="orderStatus!=null">and orderStatus=#{orderStatus}</if>
+            <if test="packageId!=null">and package_id=#{packageId}</if>
+        </where>
+    </select>
+
+    <resultMap id="returnOrderList" type="Order">
+        <id property="id" column="id"></id>
+        <result property="memberId" column="member_id"></result>
+        <result property="orderDate" column="orderDate"></result>
+        <result property="orderType" column="orderType"></result>
+        <result property="orderStatus" column="orderStatus"></result>
+        <result property="packageId" column="package_id"></result>
+    </resultMap>
+
+    <insert id="addOrder" parameterType="Order">
+        INSERT into t_order (member_id ,orderDate,orderType,orderStatus,package_id)
+        values (#{memberId},#{orderDate},#{orderType},#{orderStatus},#{packageId})
+
+        <selectKey keyProperty="id" resultType="int" keyColumn="id" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <select id="findOrderInforByOrderId" parameterType="int" resultMap="returnMap">
+
+            SELECT
+            	m.name AS member,
+            	p.name AS setmeal,
+            	o.orderDate AS Orderdate,
+            	o.orderType AS OrderType
+            FROM
+            	t_order o,
+            	t_member m,
+            	t_package p
+            WHERE
+            	o.member_id=m.id
+            AND
+            	o.package_id=p.id
+            AND
+            	o.id=#{id};
+    </select>
+    
+    <resultMap id="returnMap" type="Map">
+        <result property="member" column="member"></result>
+        <result property="setmeal" column="setmeal"></result>
+        <result property="Orderdate" column="Orderdate"></result>
+        <result property="OrderType" column="OrderType"></result>
+    </resultMap>
+
+
+    <!--查询今日预约人数-->
+    <select id="findOrderNumberToday" parameterType="String" resultType="Integer">
+        SELECT COUNT(id) FROM t_order WHERE orderDate=#{today}
+    </select>
+
+
+    <!--查询今日到诊人数-->
+    <select id="findVisitsNumberToday" parameterType="String" resultType="Integer">
+        SELECT COUNT(id) FROM t_order WHERE orderDate=#{today} AND orderStatus="已到诊"
+    </select>
+
+
+    <!--查询某日之后的预约人数-->
+    <select id="findOrderNumberAfterDate" parameterType="String" resultType="Integer">
+        SELECT COUNT(id) FROM t_order WHERE orderDate>=#{day}
+    </select>
+
+
+    <!--查询某日之后的到诊人数-->
+    <select id="findVisitsNumberAfterDate" parameterType="String" resultType="Integer">
+        SELECT COUNT(id) FROM t_order WHERE orderDate>=#{day} AND orderStatus="已到诊"
+    </select>
+
+</mapper>

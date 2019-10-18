@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itbsky.dao.MemberDao">
+
+    <!--通过手机号查询会员-->
+    <select id="findMemberByTelephone" parameterType="String" resultType="Member">
+        SELECT * FROM t_member WHERE phoneNumber=#{telephone}
+    </select>
+
+    <!--增加新会员-->
+    <insert id="addMember" parameterType="Member">
+        INSERT into t_member
+          (fileNumber,name,sex,idCard,phoneNumber,regTime,password,email,birthday,remark)
+        VALUES (#{fileNumber},#{name},#{sex},#{idCard},#{phoneNumber},#{regTime},#{password},#{email},#{birthday},#{remark})
+
+        <selectKey keyProperty="id" resultType="int" keyColumn="id" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <!--查询每月会员总数-->
+    <select id="findMembersByMonth" parameterType="String" resultType="Integer">
+        SELECT COUNT(1) FROM t_member WHERE regTime &lt;=#{month}
+    </select>
+
+
+    <!--查询套餐预约占比-->
+    <select id="getPackageReport" resultType="Map">
+          SELECT
+            p.name,
+            t.value
+          FROM
+            t_package p,(SELECT package_id, COUNT(package_id) AS VALUE FROM t_order GROUP BY package_id)t
+          WHERE
+            p.id=t.package_id
+    </select>
+
+
+    <!--查询本日新增会员数-->
+    <select id="findNewMemberByDate" parameterType="String" resultType="Integer">
+        SELECT COUNT(1) FROM t_member WHERE regTime=#{today}
+    </select>
+
+    <!--查询总会员数-->
+    <select id="findTotalMember" resultType="Integer">
+        SELECT COUNT(id) FROM t_member
+    </select>
+
+    <!--查看某日之后的新增会员-->
+    <select id="findNewMemberAfterDate" parameterType="String" resultType="Integer">
+        SELECT COUNT(1) FROM t_member WHERE regTime>=#{date}
+    </select>
+
+
+    <!--根据日期统计会员数，统计指定日期之前的会员数-->
+    <select id="findMemberCountBeforeDate" parameterType="string" resultType="int">
+        select count(id) from t_member where regTime &lt;= #{value}
+    </select>
+
+
+
+    <!--性别分析-->
+    <select id="getGender" resultType="map">
+        select
+        (case sex when '1' then '男' when '2' then '女' else '不明' end) name,count(0) value
+        from
+        t_member
+        group by sex
+    </select>
+
+    <!--年龄分析-->
+    <select id="getAge" resultType="map">
+
+        select (case
+        when birthday>='2002-01-01' and birthday&lt;'2019-08-03' then '0到18'
+        when birthday>='1989-01-01' and birthday&lt;'2002-01-01' then '18到30'
+        when birthday>='1975-01-01' and birthday&lt;'1989-01-01' then '30到45'
+        when birthday>='1900-01-01' and birthday&lt;'1975-01-01' then '45以上'
+        when birthday is NULL then '不明'
+        end) name ,count(0) value
+        from t_member
+        group by (case
+        when birthday>='2002-01-01' and birthday&lt;'2019-08-03' then '0到18'
+        when birthday>='1989-01-01' and birthday&lt;'2002-01-01' then '18到30'
+        when birthday>='1975-01-01' and birthday&lt;'1989-01-01' then '30到45'
+        when birthday>='1900-01-01' and birthday&lt;'1975-01-01' then '45以上'
+        when birthday is NULL then '不明'
+        end)
+    </select>
+
+</mapper>

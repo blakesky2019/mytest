@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+    <context:component-scan base-package="com.itbsky.security"></context:component-scan>
+    <mvc:annotation-driven/>
+
+    <!--开启权限控制注解-->
+    <security:global-method-security pre-post-annotations="enabled"/>
+    
+    
+    <!--静态资源不拦截-->
+    <security:http pattern="/css/**" security="none"/>
+    <security:http pattern="/js/**" security="none"/>
+    <security:http pattern="/login.html" security="none"/>
+    <security:http pattern="/fail.html" security="none"/>
+
+
+    <!--设置拦截器-->
+    <security:http auto-config="true" use-expressions="true">
+
+        <security:intercept-url pattern="/a.html" access="isAuthenticated()"></security:intercept-url>
+        <security:intercept-url pattern="/b.html" access="hasAuthority('ROLE_ADMIN')"></security:intercept-url>
+        <security:intercept-url pattern="/c.html" access="hasRole('')"></security:intercept-url>
+        <security:intercept-url pattern="/d.html" access="hasAuthority('')"></security:intercept-url>
+
+         <security:form-login
+                login-page="/login.html"
+                login-processing-url="/login.do"
+                username-parameter="username"
+                password-parameter="password"
+                default-target-url="/index.html"
+                always-use-default-target="false"
+                authentication-failure-url="/fail.html"/>
+        <security:csrf disabled="true"/>
+        <security:logout logout-url="/logout.do" logout-success-url="/login.html" invalidate-session="true"/>
+        <security:access-denied-handler error-page="/403.html"/>
+    </security:http>
+
+    <!--认证授权管理器-->
+    <security:authentication-manager>
+
+        <security:authentication-provider user-service-ref="securityUserService">
+            <!--使用密码加密器-->
+            <security:password-encoder ref="encoder"/>
+        </security:authentication-provider>
+    </security:authentication-manager>
+
+    <bean id="securityUserService" class="com.itbsky.security.SecurityUserService"/>
+    <bean id="encoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"/>
+</beans>

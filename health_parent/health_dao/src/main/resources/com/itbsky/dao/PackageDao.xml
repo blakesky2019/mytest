@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itbsky.dao.PackageDao">
+
+    <select id="findPage" parameterType="String" resultType="Package">
+        select * from t_package
+        <if test="value!=null and value.length>0">
+            where name like #{value} or code like #{value} or helpCode like #{value}
+        </if>
+    </select>
+
+
+    <select id="findById" parameterType="Integer" resultMap="packageCheckGroupCheckItemResultMap">
+		SELECT
+			p.*,
+			pc.checkgroup_id AS checkgroup_id,
+			cg.name AS checkgroup_name,
+			cg.remark AS checkgroup_remark,
+			cgci.checkitem_id AS checkitem_id,
+			ci.name AS checkitem_name
+		FROM
+			t_package p,
+			t_package_checkgroup pc,
+			t_checkgroup cg,
+			t_checkgroup_checkitem cgci,
+			t_checkitem ci
+		WHERE
+			p.id=pc.package_id
+		AND
+			pc.checkgroup_id=cg.id
+		AND
+			cg.id=cgci.checkgroup_id
+		AND
+			cgci.checkitem_id=ci.id
+		AND
+			p.id=#{id}
+    </select>
+	
+	<resultMap id="packageCheckGroupCheckItemResultMap" type="package">
+
+		<id property="id" column="id"></id>
+		<result property="name" column="name"></result>
+		<result property="code" column="code"></result>
+		<result property="helpCode" column="helpCode"></result>
+		<result property="sex" column="sex"></result>
+		<result property="age" column="age"></result>
+		<result property="price" column="price"></result>
+		<result property="remark" column="remark"></result>
+		<result property="attention" column="attention"></result>
+		<result property="img" column="img"></result>
+
+		<!--检查组-->
+		<collection property="checkGroups" ofType="CheckGroup" javaType="List">
+
+			<id property="id" column="checkgroup_id"></id>
+			<result property="name" column="checkgroup_name"></result>
+			<result property="remark" column="checkgroup_remark"></result>
+			
+			<!--检查项-->
+			<collection property="checkItems" ofType="CheckItem" javaType="List">
+				<id property="id" column="checkitem_id"></id>
+				<result property="name" column="checkitem_name"></result>
+			</collection>
+		</collection>
+	</resultMap>
+
+
+
+	<select id="findPackageById" parameterType="Integer" resultType="Package">
+		select * from t_package
+	</select>
+
+
+	<!--查询前四个热门的套餐-->
+	<select id="findHotPackage" resultType="Map">
+		SELECT
+			p.name,
+			t.count,
+			t.proportion,
+			p.remark
+		FROM
+			t_package p,
+			(SELECT o1.package_id,COUNT(o1.package_id) AS COUNT,COUNT(package_id)/o2.orderTotal AS proportion FROM t_order o1,(SELECT COUNT(package_id) AS orderTotal  FROM t_order) o2 GROUP BY o1.package_id ORDER BY proportion DESC LIMIT 0,4)t
+		WHERE
+			p.id=t.package_id
+	</select>
+
+
+</mapper>
