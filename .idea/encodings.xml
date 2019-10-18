@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding" defaultCharsetForPropertiesFiles="UTF-8">
+    <file url="file://$PROJECT_DIR$/health_parent" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/health_parent/health_common" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/health_parent/health_dao" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/health_parent/health_interface" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/health_parent/health_job" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/health_parent/health_mobile" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/health_parent/health_pojo" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/health_parent/health_service" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/health_parent/health_web" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/health_parent/security_demo" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../day68_health_teacher_10_02/health_parent" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../day68_health_teacher_10_02/health_parent/health_common" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../day68_health_teacher_10_02/health_parent/health_dao" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../day68_health_teacher_10_02/health_parent/health_interface" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../day68_health_teacher_10_02/health_parent/health_job" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../day68_health_teacher_10_02/health_parent/health_mobile" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../day68_health_teacher_10_02/health_parent/health_pojo" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../day68_health_teacher_10_02/health_parent/health_service" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../day68_health_teacher_10_02/health_parent/health_web" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/../day68_health_teacher_10_02/health_parent/securityDemo" charset="UTF-8" />
+    <file url="PROJECT" charset="UTF-8" />
+  </component>
+</project>
